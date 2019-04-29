@@ -136,21 +136,30 @@ class PortalController {
      * @param {String} src 
      */
     _appendShadowDom(selectorList, src) {
-        const createShadowDiv = body => {
+        selectorList.map(selector => {
             const div = document.createElement('div');
             const shadowRoot = div.attachShadow({mode: "open"});
-            shadowRoot.innerHTML = body;
-            return div;
-        }
-        fetch(src).then(res => {
-            res.text().then(body => {
-                const shadowDiv = createShadowDiv(body);
-                selectorList.map(selector => {
-                    const shadowDiv = createShadowDiv(body);
-                    document.querySelector(selector).appendChild(shadowDiv);
-                })
-            })
+            shadowRoot.appendChild(document.documentElement.cloneNode(true));
+            document.querySelector(selector).appendChild(div);
         })
+        /**
+         * Replacing the logic to just use deep clone of the page
+         */
+        // const createShadowDiv = body => {
+        //     const div = document.createElement('div');
+        //     const shadowRoot = div.attachShadow({mode: "open"});
+        //     shadowRoot.innerHTML = body;
+        //     return div;
+        // }
+        // fetch(src).then(res => {
+        //     res.text().then(body => {
+        //         const shadowDiv = createShadowDiv(body);
+        //         selectorList.map(selector => {
+        //             const shadowDiv = createShadowDiv(body);
+        //             document.querySelector(selector).appendChild(shadowDiv);
+        //         })
+        //     })
+        // })
     }
 
     /**

@@ -17,13 +17,13 @@ $ npm run demo
 - Click on the bottom half of the page to move to the next page
 
 ## Explainer
-![explainer](https://cdn.glitch.com/98449704-33d8-49b2-88f2-aa6d2aeba5d3%2Fportal-flip-explainer.png?1556547027538)
+![explainer](https://cdn.glitch.com/98449704-33d8-49b2-88f2-aa6d2aeba5d3%2Fportal-flip-explainer-fix.png?1556549030930)
 - `js/portals-controller.js` dynamically adds 6 flip panels
 - The upper fold (
-  - front: fetching current page && adding the top half as a Shadow DOM
+  - front: fetching current page && adding the top half of the cloned page as a Shadow DOM
   - back: prev page Portal's top half
 - The lower fold
-  - front: fetching current page && adding the bottom half as a Shadow DOM
+  - front: fetching current page && adding the bottom half of the cloned page as a Shadow DOM
   - back: prev page Portal's bottom half)
 - Portals (Next Portal and Prev Portal. Dynamically hide/show with user interaction)
 
