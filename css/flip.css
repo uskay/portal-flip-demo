@@ -1,0 +1,87 @@
+#upperFold,
+#lowerFold {
+    width: 100%;
+    height: 50%;
+    position: fixed;
+    transform-style: preserve-3d;
+}
+
+#upperFold {
+    top: 0px;
+    transform-origin: center bottom;
+}
+
+#lowerFold {
+    bottom: 0px;
+    transform-origin: center top;
+}
+
+.front,
+.back {
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    position: absolute;
+}
+
+#upperFold .front {
+    overflow: hidden;
+}
+
+#upperFold .front div {
+    width: 100%;
+    height: 100%;
+    border: none;
+    position: absolute;
+    top: 0px;
+}
+
+#upperFold .back {
+    transform: rotateX(180deg);
+    overflow:hidden;
+}
+
+#upperFold .back portal {
+    width: 100%;
+    height: 200%;
+    top: -100%;
+    position: absolute;
+}
+
+#lowerFold .front {
+    overflow: hidden; 
+}
+
+#lowerFold .front div {
+    width: 100%;
+    height: 200%;
+    border: none;
+    position: absolute;
+    top: -100%;
+}
+
+#lowerFold .back {
+    transform: rotateX(180deg);
+    overflow: hidden;
+}
+
+#lowerFold .back portal {
+    width: 100%;
+    height: 200%;
+}
+
+#nextPortal,
+#prevPortal {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    z-index: -1;
+    opacity: 0;
+}
+
+#nextPortal portal,
+#prevPortal portal {
+    width: 100%;
+    height: 100%;
+}
