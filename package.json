@@ -1,10 +1,11 @@
 {
   "name": "portal-flip-demo",
   "version": "1.0.0",
-  "description": "",
+  "description": "This demo demonstrates how Portals can enable a seamless user experience among first party pages with flip animation.",
   "main": "index.js",
   "scripts": {
-    "demo": "http-server"
+    "demo": "http-server",
+    "lint": "gulp"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,10 @@
   },
   "homepage": "https://github.com/uskay/portal-flip-demo#readme",
   "devDependencies": {
-    "http-server": "^0.11.1"
+    "http-server": "^0.11.1",
+    "eslint": "^5.16.0",
+    "eslint-config-google": "^0.12.0",
+    "gulp": "^4.0.1",
+    "gulp-eslint": "^5.0.0"
   }
 }

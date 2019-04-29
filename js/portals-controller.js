@@ -6,7 +6,7 @@ class PortalController {
 
     /**
      * Constructor
-     * @param {Object} option 
+     * @param {Object} pageList 
      */
     constructor(pageList) {
         this.option = {
@@ -25,27 +25,19 @@ class PortalController {
      */
     init() {
         const {
-            pageList, 
             upperFrontSelector, 
-            upperBackSelector, 
             lowerFrontSelector, 
-            lowerBackSelector,
-            nextPortalSelector,
-            prevPortalSelector
         } = this.option;
 
         // Append flip elements
         this._createFlip();
-
-        // Save page list
-        this.pageList = pageList;
 
         // Init flags
         this.isTransitioning = false;
         this.initDone = false;
 
         // Add contents to the upper front div and lower front div as Shadow DOM
-        this._appendShadowDom([upperFrontSelector, lowerFrontSelector], location.pathname);
+        this._appendShadowDom([upperFrontSelector, lowerFrontSelector]);
 
         // If it's the inital page load
         if(!window.portalHost) {
@@ -65,24 +57,22 @@ class PortalController {
      */
     initTransition(predecessor) {        
         const {
-            currentPageIndex, 
-            pageList, 
-            upperFrontSelector, 
+            pageList,
             upperBackSelector, 
-            lowerFrontSelector, 
             lowerBackSelector,
             nextPortalSelector,
             prevPortalSelector
         } = this.option;
         if(this._hasNextPage()) {
-            const nextPortal = this._createPortal(this.pageList[location.pathname].next);
+            const nextPortal = 
+                this._createPortal(pageList[location.pathname].next);
             const lowerBackPortal = nextPortal.cloneNode();
             this._appendPortal(nextPortalSelector, nextPortal);
             this._appendPortal(lowerBackSelector, lowerBackPortal);
         }
         if(this._hasPrevPage()){
             const prevPortal = predecessor ? predecessor :
-                this._createPortal(this.pageList[location.pathname].prev);
+                this._createPortal(pageList[location.pathname].prev);
             const upperBackPortal = prevPortal.cloneNode(upperBackSelector);
             this._appendPortal(prevPortalSelector, prevPortal);
             this._appendPortal(upperBackSelector, upperBackPortal);
@@ -91,6 +81,9 @@ class PortalController {
         this.initDone = true;
     }
 
+    /**
+     * Create the flip elements
+     */
     _createFlip() {
         const div = document.createElement('div');
         const flipElements = `
@@ -135,7 +128,7 @@ class PortalController {
      * @param {Array} selectorList 
      * @param {String} src 
      */
-    _appendShadowDom(selectorList, src) {
+    _appendShadowDom(selectorList) {
         selectorList.map(selector => {
             const div = document.createElement('div');
             const shadowRoot = div.attachShadow({mode: "open"});
@@ -167,7 +160,10 @@ class PortalController {
      * @returns {boolean}
      */
     _hasNextPage() {
-        return this.pageList[location.pathname].next !== undefined;
+        const {
+            pageList
+        } = this.option;
+        return pageList[location.pathname].next !== undefined;
     }
 
     /**
@@ -175,7 +171,10 @@ class PortalController {
      * @returns {boolean}
      */
     _hasPrevPage() {
-        return this.pageList[location.pathname].prev !== undefined;
+        const {
+            pageList
+        } = this.option;
+        return pageList[location.pathname].prev !== undefined;
     }
 
     /**
@@ -196,44 +195,48 @@ class PortalController {
             }
             this.transitionSelector = selector;
             this.isTransitioning = true;
-            document.querySelector(selector).parentNode.style.transition = "all 0.5s ease-in-out";
-            document.querySelector(selector).parentNode.style.transform = "rotate3d(1, 0, 0, 180deg)";
+            document.querySelector(selector).parentNode
+                .style.transition = "all 0.5s ease-in-out";
+            document.querySelector(selector).parentNode
+                .style.transform = "rotate3d(1, 0, 0, 180deg)";
             if(selector === lowerFrontSelector) {
-                document.querySelector(upperFrontSelector).parentNode.style.zIndex = 1;
-                document.querySelector(lowerFrontSelector).parentNode.style.zIndex = 2;
+                document.querySelector(upperFrontSelector)
+                    .parentNode.style.zIndex = 1;
+                document.querySelector(lowerFrontSelector)
+                    .parentNode.style.zIndex = 2;
                 document.querySelector(nextPortalSelector).style.zIndex = 0;
                 document.querySelector(nextPortalSelector).style.opacity = 1;
                 document.querySelector(prevPortalSelector).style.opacity = 0;
-                this.activatePortal = document.querySelector(`${nextPortalSelector} portal`);
+                this.activatePortal = 
+                    document.querySelector(`${nextPortalSelector} portal`);
                 return;
             }
-            document.querySelector(upperFrontSelector).parentNode.style.zIndex = 2;
-            document.querySelector(lowerFrontSelector).parentNode.style.zIndex = 1;
+            document.querySelector(upperFrontSelector)
+                .parentNode.style.zIndex = 2;
+            document.querySelector(lowerFrontSelector)
+                .parentNode.style.zIndex = 1;
             document.querySelector(prevPortalSelector).style.zIndex = 0;
             document.querySelector(nextPortalSelector).style.opacity = 0;
             document.querySelector(prevPortalSelector).style.opacity = 1;
-            this.activatePortal = document.querySelector(`${prevPortalSelector} portal`);
+            this.activatePortal = 
+                document.querySelector(`${prevPortalSelector} portal`);
             
         }
 
         if(this._hasNextPage()) {
-            document.querySelector(lowerFrontSelector).addEventListener('click', evt => {
+            document.querySelector(lowerFrontSelector)
+                .addEventListener('click', evt => {
                 addTransition(lowerFrontSelector);
             });
         }
         if(this._hasPrevPage()) {
-            document.querySelector(upperFrontSelector).addEventListener('click', evt => {
+            document.querySelector(upperFrontSelector)
+                .addEventListener('click', evt => {
                 addTransition(upperFrontSelector);
             });
         }
         
         window.addEventListener("transitionend", evt => {
-            const {
-                upperFrontSelector, 
-                lowerFrontSelector, 
-                nextPortalSelector,
-                prevPortalSelector
-            } = this.option;
             if (evt.propertyName == "transform") {
                 this.activatePortal.activate().then(_ => {
                     // TODO: a good timing to reset the style
