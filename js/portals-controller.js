@@ -252,6 +252,12 @@ const pageList = {
     },
 }
 
-// Start flippping ;-)
-const controller = new PortalController(pageList);
-controller.init();
+// If Portals is available Start flippping ;-)
+if ('HTMLPortalElement' in window) {
+    const controller = new PortalController(pageList);
+    controller.init();
+} else {
+    // Else, just show the page
+    document.body.style.overflow = 'visible';
+    document.documentElement.style.overflow = 'visible';
+}
